@@ -1,13 +1,12 @@
 
 const BUTTON_ID = 'as-my-complete-button';
-
-console.warn('strike-trough MODULE init');
+const INPUT_SELECTOR = '#xCancelBu ~ div input';
 
 
 (async function(){
   function getInput() {
     return new Promise((resolve, reject) => {
-      let input = document.querySelector('#xCancelBu ~ div input');
+      let input = document.querySelector(INPUT_SELECTOR);
       if (input) {
         resolve(input);
       }
@@ -19,7 +18,7 @@ console.warn('strike-trough MODULE init');
 
       function checkInDelay() {
         timeoutLink = setTimeout(() => {
-          let input = document.querySelector('#xCancelBu ~ div input');
+          let input = document.querySelector(INPUT_SELECTOR);
           if (input) {
             resolve(input);
             clearTimeout(timeoutLink);
@@ -93,11 +92,9 @@ console.warn('strike-trough MODULE init');
   }
 
   window.addEventListener('popstate', async function(e){
-    console.log('url changed');
     // TODO: check if valid url
     await init();
   });
 
   init();
-
 })()
