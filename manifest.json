@@ -1,14 +1,17 @@
 {
   "name": "Google Calendar Event Checker",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 2,
-  "description": "It adds button to event title input to check\\uncheck event as completed.",
+  "description": "It adds button to event title input to mark event as completed by applying strikethrough effect over event's title.",
   "permissions": [
     "activeTab"
    ],
    "content_scripts": [
     {
-      "matches": ["https://calendar.google.com/calendar/r*"],
+      "matches": [
+        "https://calendar.google.com/calendar/r",
+        "https://calendar.google.com/calendar/r/eventedit*"
+      ],
       "run_at": "document_idle",
       "js": ["contentScript.js"]
     }

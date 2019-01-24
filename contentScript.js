@@ -1,24 +1,22 @@
-
-const BUTTON_ID = 'as-my-complete-button';
-const INPUT_SELECTOR = '#xCancelBu ~ div input';
-
-
 (async function(){
+  const BUTTON_ID = 'as-my-complete-button';
+  const INPUT_SELECTOR = '#xCancelBu ~ div input';
+
   function getInput() {
     return new Promise((resolve, reject) => {
-      let input = document.querySelector(INPUT_SELECTOR);
+      const input = document.querySelector(INPUT_SELECTOR);
       if (input) {
         resolve(input);
       }
 
-      let timeoutLink;
       const delay = 500;
       const maxIterations = 10;
       let iteration = 0;
+      let timeoutLink;
 
       function checkInDelay() {
         timeoutLink = setTimeout(() => {
-          let input = document.querySelector(INPUT_SELECTOR);
+          const input = document.querySelector(INPUT_SELECTOR);
           if (input) {
             resolve(input);
             clearTimeout(timeoutLink);
@@ -29,6 +27,7 @@ const INPUT_SELECTOR = '#xCancelBu ~ div input';
             reject(new Error('Input node was not found; timeout'));
             return;
           }
+
           iteration += 1;
           checkInDelay();
         }, delay);
@@ -59,20 +58,21 @@ const INPUT_SELECTOR = '#xCancelBu ~ div input';
     input.dispatchEvent(new Event('input', { 'bubbles': true }))
   }
 
-  function onButtonClicked(event) {
+  function onButtonClicked() {
     makeReplacement();
   }
 
   function addButton(container) {
-    var alreadyButton = document.getElementById(BUTTON_ID);
+    const alreadyButton = document.getElementById(BUTTON_ID);
     if (alreadyButton) {
       return;
     }
 
-    var button = document.createElement('button');
+    const button = document.createElement('button');
     button.innerText = '✅';
 
     button.style.border = 'none';
+    button.style.outline = 'none';
     button.style.padding = 0;
     button.style.margin = 0;
     button.style.background = 'none';
@@ -81,20 +81,26 @@ const INPUT_SELECTOR = '#xCancelBu ~ div input';
     button.id = BUTTON_ID;
 
     button.addEventListener('click', onButtonClicked);
+
     container.appendChild(button);
   }
 
-  async function init() {
-    console.warn('strike-trough init');
-    const input = await getInput();
-    console.warn('input found', input);
-    addButton(input.parentElement);
+  async function startAdding() {
+    try {
+      const input = await getInput();
+      addButton(input.parentElement);
+    } catch (error) {
+      // TODO
+    }
   }
 
-  window.addEventListener('popstate', async function(e){
-    // TODO: check if valid url
-    await init();
-  });
+  function init() {
+    startAdding();
+
+    window.addEventListener('popstate', async function(e) {
+      await startAdding();
+    });
+  }
 
   init();
 })()
