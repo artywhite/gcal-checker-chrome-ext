@@ -1,6 +1,7 @@
 {
   "name": "Google Calendar Event Checker",
-  "version": "1.0.2",
+  "short_name": "gcal-checker",
+  "version": "1.0.3",
   "manifest_version": 2,
   "description": "It adds button to event title input to mark event as completed by applying strikethrough effect over event's title.",
   "permissions": [
