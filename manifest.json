@@ -10,7 +10,7 @@
    "content_scripts": [
     {
       "matches": [
-        "https://calendar.google.com/calendar/r*"
+        "https://calendar.google.com/calendar/*"
       ],
       "run_at": "document_idle",
       "js": ["contentScript.js"]

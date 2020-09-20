@@ -1,25 +1,31 @@
 (async function(){
-  const BUTTON_ID = 'as-my-complete-button';
+  const BUTTON_ID = 'gcal-checker-chrome-ext-btn';
   const INPUT_SELECTOR = '#xCancelBu ~ div input';
 
   function getInput() {
     return new Promise((resolve, reject) => {
-      const input = document.querySelector(INPUT_SELECTOR);
-      if (input) {
-        resolve(input);
-      }
-
       const delay = 500;
-      const maxIterations = 10;
+      const maxIterations = 15;
       let iteration = 0;
       let timeoutLink;
 
+      let isRightPage = getIsRightPage();
+      const input = document.querySelector(INPUT_SELECTOR);
+
+      if (isRightPage && input) {
+        resolve(input);
+
+        return;
+      }
+
       function checkInDelay() {
         timeoutLink = setTimeout(() => {
+          isRightPage = getIsRightPage();
           const input = document.querySelector(INPUT_SELECTOR);
-          if (input) {
+          if (isRightPage && input) {
             resolve(input);
             clearTimeout(timeoutLink);
+
             return;
           }
 
@@ -94,11 +100,15 @@
     }
   }
 
+  function getIsRightPage() {
+    return window.location.href.indexOf("eventedit") !== -1;
+  }
+
   function init() {
     startAdding();
 
-    window.addEventListener('popstate', async function(e) {
-      await startAdding();
+    window.addEventListener('popstate', function(e) {
+      startAdding();
     });
   }
 
