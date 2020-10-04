@@ -50,13 +50,13 @@
     const isAlreadyStriked = [...nextValue].some(item => item === '\u0336');
 
     if (isAlreadyStriked) {
-      // TODO: emoji icon setting
-      // nextValue = nextValue.slice(2);
+      if (nextValue[0] === "✅") {
+        nextValue = nextValue.slice(2); // emoji and space
+      }
       nextValue = nextValue.split('').filter(item => item !== '\u0336').join('');
     } else {
       nextValue = nextValue.split('').map((item => item + '\u0336')).join("");
-      // TODO: emoji icon setting
-      // nextValue = `✅ ${nextValue}`
+      nextValue = `✅ ${nextValue}`
     }
 
     input.value = `${nextValue}`;
