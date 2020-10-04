@@ -4,4 +4,4 @@ Chrome plugin that adds button for marking event\task as completed by applying
 strikethrough text over title.
 
 ## TODO
-- emoji icon setting (whether to put ✅ icon if task completed)
+- [WIP] emoji icon setting (whether to put ✅ icon if task completed)
