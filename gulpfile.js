@@ -13,13 +13,15 @@ gulp.task('copy-icons', function () {
 gulp.task(
     'copy',
     gulp.series('copy-icons', function () {
-        return gulp.src(['./manifest.json']).pipe(gulp.dest('./dist'));
+        return gulp
+            .src(['./manifest.json', './options.html'])
+            .pipe(gulp.dest('./dist'));
     })
 );
 
 gulp.task('script', function () {
     return gulp
-        .src('./contentScript.js')
+        .src(['./contentScript.js', './options.js'])
         .pipe(uglify())
         .pipe(gulp.dest('./dist'));
 });
