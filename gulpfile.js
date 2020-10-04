@@ -27,7 +27,7 @@ gulp.task('script', function() {
 gulp.task('make-archive', () =>
   gulp
     .src('dist/**/*')
-    .pipe(zip(`gcal-checker-ext-${formatDate(new Date(), 'DD.MM.YYYY')}.zip`))
+    .pipe(zip(`gcal-checker-ext-${formatDate(new Date(), 'dd.MM.yyyy')}.zip`))
     .pipe(gulp.dest('dist-archives/'))
 );
 
