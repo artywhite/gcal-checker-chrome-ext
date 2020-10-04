@@ -52,6 +52,7 @@
         );
 
         if (isAlreadyStriked) {
+            // remove strike effect and first emoji
             if (nextValue[0] === '✅') {
                 nextValue = nextValue.slice(2); // emoji and space
             }
@@ -60,9 +61,23 @@
                 .filter((item) => item !== '\u0336')
                 .join('');
         } else {
+            // add strike effect and first emoji
             nextValue = nextValue
                 .split('')
-                .map((item) => item + '\u0336')
+                .map((item) => {
+                    /*
+                        don't break special characters and emojis.
+                        2000 is just randomly picked code point from where most characters
+                        seems broken with added strike effect.
+                        ideally there should be proper checking whether specific code point
+                        can be shown OK with added strike effect.
+                    */
+                    if (item.charCodeAt(0) > 2000) {
+                        return item;
+                    }
+
+                    return item + '\u0336';
+                })
                 .join('');
             nextValue = `✅ ${nextValue}`;
         }
