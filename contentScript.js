@@ -2,6 +2,9 @@
     const BUTTON_ID = 'gcal-checker-chrome-ext-btn';
     const INPUT_SELECTOR = '#xCancelBu ~ div input';
 
+    const storageGet = (obj) =>
+        new Promise((resolve) => chrome.storage.sync.get(obj, resolve));
+
     function getInput() {
         return new Promise((resolve, reject) => {
             const delay = 500;
@@ -46,6 +49,9 @@
     async function makeReplacement() {
         const input = await getInput();
         let nextValue = input.value;
+        const { addEmojiCheckMark } = await storageGet({
+            addEmojiCheckMark: false, // false -- default value
+        });
 
         const isAlreadyStriked = [...nextValue].some(
             (item) => item === '\u0336'
@@ -56,6 +62,7 @@
             if (nextValue[0] === '✅') {
                 nextValue = nextValue.slice(2); // emoji and space
             }
+
             nextValue = nextValue
                 .split('')
                 .filter((item) => item !== '\u0336')
@@ -79,7 +86,10 @@
                     return item + '\u0336';
                 })
                 .join('');
-            nextValue = `✅ ${nextValue}`;
+
+            if (addEmojiCheckMark) {
+                nextValue = `✅ ${nextValue}`;
+            }
         }
 
         input.value = `${nextValue}`;
