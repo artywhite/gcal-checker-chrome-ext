@@ -48,10 +48,11 @@
 
     async function makeReplacement() {
         const input = await getInput();
-        let nextValue = input.value;
+        const originValue = input.value;
         const { addEmojiCheckMark } = await storageGet({
             addEmojiCheckMark: false, // false -- default value
         });
+        let nextValue = input.value;
 
         const isAlreadyStriked = [...nextValue].some(
             (item) => item === '\u0336'
@@ -95,10 +96,35 @@
         input.value = `${nextValue}`;
 
         input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        try {
+            toggleDescription({
+                originValue: isAlreadyStriked ? nextValue : originValue,
+                currentValue: nextValue,
+                checked: !isAlreadyStriked
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function onButtonClicked() {
         makeReplacement();
+    }
+
+    function toggleDescription({ originValue, checked }) {
+        const textDiv = document.querySelector('div[aria-label="Description"][role="textbox"]');
+        if (!textDiv) {
+            // TODO: what?
+            return;
+        }
+        const specialMark = "\u{200b}";
+        const dateTimeLabel = (new Date()).toLocaleDateString(undefined, { timeZoneName: 'short' }) + ", " + (new Date()).toLocaleTimeString();
+        if (checked) {
+            textDiv.innerHTML += `<br>===${specialMark}===<br>Completed on: ${dateTimeLabel}<br>Origin title: ${originValue}<br>===${specialMark}===`;
+        } else {
+            textDiv.innerHTML = textDiv.innerHTML.replace(/<br>===\u{200b}===<br>Completed on:.*<br>===\u{200b}===/gu, "");
+        }
     }
 
     function addButton(container) {
