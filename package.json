@@ -3,10 +3,10 @@
     "build": "gulp"
   },
   "devDependencies": {
-    "date-fns": "^2.16.1",
+    "date-fns": "^2.24.0",
     "del": "^6.0.0",
     "gulp": "^4.0.2",
-    "gulp-uglify-es": "^2.0.0",
-    "gulp-zip": "^5.0.2"
+    "gulp-uglify-es": "^3.0.0",
+    "gulp-zip": "^5.1.0"
   }
 }
