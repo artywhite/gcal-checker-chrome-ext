@@ -7,8 +7,8 @@
 
     function getInput() {
         return new Promise((resolve, reject) => {
-            const delay = 500;
-            const maxIterations = 15;
+            const delay = 1000;
+            const maxIterations = 60;
             let iteration = 0;
             let timeoutLink;
 
@@ -22,12 +22,12 @@
             }
 
             function checkInDelay() {
+                clearTimeout(timeoutLink);
                 timeoutLink = setTimeout(() => {
                     isRightPage = getIsRightPage();
                     const input = document.querySelector(INPUT_SELECTOR);
                     if (isRightPage && input) {
                         resolve(input);
-                        clearTimeout(timeoutLink);
 
                         return;
                     }
@@ -49,6 +49,12 @@
     async function makeReplacement() {
         const input = await getInput();
         const originValue = input.value;
+
+        // no need to touch empty input
+        if (!originValue) {
+            return;
+        }
+
         const { addEmojiCheckMark } = await storageGet({
             addEmojiCheckMark: false, // false -- default value
         });
@@ -113,17 +119,18 @@
     }
 
     function toggleDescription({ originValue, checked }) {
-        const textDiv = document.querySelector('div[aria-label="Description"][role="textbox"]');
+        const textDiv = document.querySelector('div[contenteditable="true"][role="textbox"][aria-multiline="true"]');
         if (!textDiv) {
-            // TODO: what?
+            console.error('Description div node was not found');
             return;
         }
         const specialMark = "\u{200b}";
         const dateTimeLabel = (new Date()).toLocaleDateString(undefined, { timeZoneName: 'short' }) + ", " + (new Date()).toLocaleTimeString();
         if (checked) {
-            textDiv.innerHTML += `<br>===${specialMark}===<br>Completed on: ${dateTimeLabel}<br>Origin title: ${originValue}<br>===${specialMark}===`;
+            let appendHtml = `${textDiv.innerHTML.length ? '<br>' : ''}===${specialMark}===<br>Completed on: ${dateTimeLabel}<br>Origin title: ${originValue}<br>===${specialMark}===`;
+            textDiv.innerHTML += appendHtml;
         } else {
-            textDiv.innerHTML = textDiv.innerHTML.replace(/<br>===\u{200b}===<br>Completed on:.*<br>===\u{200b}===/gu, "");
+            textDiv.innerHTML = textDiv.innerHTML.replace(/(<br>)?===\u{200b}===<br>Completed on:.*<br>===\u{200b}===/gu, "");
         }
     }
 
@@ -166,6 +173,9 @@
     function init() {
         startAdding();
 
+        // TODO: apparently popstate event is not being fired always,
+        // so use Mutation Observer and check whether body's [data-viewfamily] got changed
+        // (by using attributeFilter)
         window.addEventListener('popstate', function (e) {
             startAdding();
         });
