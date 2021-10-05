@@ -29,7 +29,6 @@ async function save_options(event) {
     const { target } = event;
 
     const { id, checked } = target;
-    console.log('save_options', id, checked);
 
     const statusNode = document.getElementById('status');
     document.forms[0].children[0].disabled = true;
