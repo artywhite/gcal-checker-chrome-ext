@@ -1,25 +1,47 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Google Calendar Event Checker Options</title>
-        <style>
-            #status {
-                align-items: center;
-                box-sizing: border-box;
-                display: flex;
-                justify-content: center;
-                min-height: 35px;
-            }
-        </style>
-    </head>
-    <body>
-        <label>
-            <input type="checkbox" id="add-emoji-check-mark" />
-            Add check mark emoji in the beginning of the title once marked as
-            done
-        </label>
 
-        <div id="status"></div>
-        <script src="options.js"></script>
-    </body>
+<head>
+    <title>Google Calendar Event Checker Options</title>
+    <style>
+        #status {
+            align-items: center;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            min-height: 35px;
+        }
+
+        fieldset {
+            border: none;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <fieldset>
+            <label>
+                <input type="checkbox" id="add-emoji-check-mark" />
+                Add check mark emoji in the beginning of the title once marked as
+                completed.
+            </label>
+            <label>
+                <input type="checkbox" id="add-description-completed-datetime" />
+                Add date and time label when it was completed to the description teaxtarea.
+            </label>
+            <label>
+                <input type="checkbox" id="add-description-origin-title" />
+                Add origin title to the description teaxtarea, which is needed for search.
+            </label>
+        </fieldset>
+    </form>
+
+
+    <div id="status"></div>
+    <script src="options.js"></script>
+</body>
+
 </html>
