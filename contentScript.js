@@ -55,8 +55,10 @@
             return;
         }
 
-        const { addEmojiCheckMark } = await storageGet({
-            addEmojiCheckMark: false, // false -- default value
+        const Options = await storageGet({
+            'add-emoji-check-mark': true, // true -- default value
+            'add-description-completed-datetime': true,
+            'add-description-origin-title': true,
         });
         let nextValue = input.value;
 
@@ -94,7 +96,7 @@
                 })
                 .join('');
 
-            if (addEmojiCheckMark) {
+            if (Options['add-emoji-check-mark']) {
                 nextValue = `✅ ${nextValue}`;
             }
         }
@@ -107,7 +109,8 @@
             toggleDescription({
                 originValue: isAlreadyStriked ? nextValue : originValue,
                 currentValue: nextValue,
-                checked: !isAlreadyStriked
+                checked: !isAlreadyStriked,
+                options: Options
             });
         } catch (error) {
             console.error(error);
@@ -118,19 +121,31 @@
         makeReplacement();
     }
 
-    function toggleDescription({ originValue, checked }) {
+    function toggleDescription({ originValue, checked, options }) {
         const textDiv = document.querySelector('div[contenteditable="true"][role="textbox"][aria-multiline="true"]');
         if (!textDiv) {
             console.error('Description div node was not found');
             return;
         }
-        const specialMark = "\u{200b}";
+
         const dateTimeLabel = (new Date()).toLocaleDateString(undefined, { timeZoneName: 'short' }) + ", " + (new Date()).toLocaleTimeString();
-        if (checked) {
-            let appendHtml = `${textDiv.innerHTML.length ? '<br>' : ''}===${specialMark}===<br>Completed on: ${dateTimeLabel}<br>Origin title: ${originValue}<br>===${specialMark}===`;
+        const completedLabel = options['add-description-completed-datetime']
+            ? `Completed on: ${dateTimeLabel}`
+            : '';
+
+        const originTitleLabel = options['add-description-origin-title']
+            ? `Origin title: ${originValue}`
+            : ''
+
+        const specialMark = "\u{200b}";
+        const labelsDivided = [completedLabel, originTitleLabel].filter(x => x).join('<br>');
+        const newHtml = `===${specialMark}===<br>${labelsDivided}<br>===${specialMark}===`;
+
+        if (checked && (completedLabel || originTitleLabel)) {
+            let appendHtml = `${textDiv.innerHTML.length ? '<br>' : ''}${newHtml}`;
             textDiv.innerHTML += appendHtml;
         } else {
-            textDiv.innerHTML = textDiv.innerHTML.replace(/(<br>)?===\u{200b}===<br>Completed on:.*<br>===\u{200b}===/gu, "");
+            textDiv.innerHTML = textDiv.innerHTML.replace(/(<br>)?===\u{200b}===.*===\u{200b}===/gu, "");
         }
     }
 
