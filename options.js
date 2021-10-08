@@ -6,7 +6,8 @@ const StorageManager = {
         new Promise((resolve) => chrome.storage.sync.get(obj, resolve))
 }
 
-const Options = {
+// TODO: have a single place for options info -> reuse this object in options.html
+const InitialOptions = {
     /**
      * Whether to add check emoji (✅) in the beginning of event title.
      */
@@ -18,37 +19,59 @@ const Options = {
     'add-description-completed-datetime': true,
 
     /**
-     * Whether to ad origin title to the description, which is needed for search.
+     * Whether to ada origin title to the description, which is needed for search.
      */
     'add-description-origin-title': true,
+
+    /**
+     * Whether to add strikethrough effect on event title. Note: either this or check mark emoji setting should be enabled in order to see event as completed.
+     */
+     'use-strikethrough-effect': true,
 };
 
-const OptionsKeys = Object.keys(Options);
+const OptionsKeys = Object.keys(InitialOptions);
 
 async function save_options(event) {
     const { target } = event;
-
     const { id, checked } = target;
-
+    const form = document.forms[0];
+    const fieldset = form.children[0];
     const statusNode = document.getElementById('status');
-    document.forms[0].children[0].disabled = true;
+    const currentValues = [...form.elements].reduce((result, item) => {
+        if (item.nodeName.toLowerCase() !== 'input') {
+            return result;
+        }
+        result[item.id] = item.checked;
+        return result;
+    }, {});
+
+    const neitherChecked = !currentValues['add-emoji-check-mark'] && !currentValues['use-strikethrough-effect'];
+    if (neitherChecked) {
+        statusNode.textContent =
+            'Either check mark or strikethrough effect should be selected';
+
+        target.checked = true;
+
+        return;
+    }
+
+    fieldset.disabled = true;
+
+    statusNode.textContent = '';
 
     try {
         await StorageManager.set({ [id]: checked });
         statusNode.textContent = 'Options saved.';
-        setTimeout(function () {
-            statusNode.textContent = '';
-        }, 1500);
     } catch (error) {
         statusNode.textContent =
             'Something went wrong. Please refresh page and try again';
     } finally {
-        document.forms[0].children[0].disabled = false;
+        fieldset.disabled = false;
     }
 }
 
 async function restore_options() {
-    const resolvedOptions = await StorageManager.get(Options);
+    const resolvedOptions = await StorageManager.get(InitialOptions);
     Object.keys(resolvedOptions).forEach((key) => document.getElementById(key).checked = resolvedOptions[key]);
 }
 

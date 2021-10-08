@@ -59,14 +59,15 @@
             'add-emoji-check-mark': true, // true -- default value
             'add-description-completed-datetime': true,
             'add-description-origin-title': true,
+            'use-strikethrough-effect': true,
         });
         let nextValue = input.value;
 
-        const isAlreadyStriked = [...nextValue].some(
-            (item) => item === '\u0336'
+        const isAlreadyMarked = [...nextValue].some(
+            (item) => item === '\u0336' || item === '✅'
         );
 
-        if (isAlreadyStriked) {
+        if (isAlreadyMarked) {
             // remove strike effect and first emoji
             if (nextValue[0] === '✅') {
                 nextValue = nextValue.slice(2); // emoji and space
@@ -77,8 +78,9 @@
                 .filter((item) => item !== '\u0336')
                 .join('');
         } else {
-            // add strike effect and first emoji
-            nextValue = nextValue
+            // add strikethrough effect
+            if (Options['use-strikethrough-effect']) {
+                nextValue = nextValue
                 .split('')
                 .map((item) => {
                     /*
@@ -95,7 +97,9 @@
                     return item + '\u0336';
                 })
                 .join('');
+            }
 
+            // add emoji
             if (Options['add-emoji-check-mark']) {
                 nextValue = `✅ ${nextValue}`;
             }
@@ -107,9 +111,9 @@
 
         try {
             toggleDescription({
-                originValue: isAlreadyStriked ? nextValue : originValue,
+                originValue: isAlreadyMarked ? nextValue : originValue,
                 currentValue: nextValue,
-                checked: !isAlreadyStriked,
+                checked: !isAlreadyMarked,
                 options: Options
             });
         } catch (error) {
