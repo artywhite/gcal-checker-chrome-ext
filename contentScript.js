@@ -220,11 +220,6 @@
     }
 
     function addButton(container) {
-        const isAlreadyAdded = document.getElementById(BTN_WRAPPER_ID);
-        if (isAlreadyAdded) {
-            return;
-        }
-
         const btnWrapper = document.createElement("div");
         btnWrapper.id = BTN_WRAPPER_ID;
         btnWrapper.style.position = "absolute";
@@ -253,10 +248,16 @@
 
     async function startAdding() {
         try {
+            const isAlreadyAdded = document.getElementById(BTN_WRAPPER_ID);
+            if (isAlreadyAdded) {
+                return;
+            }
+
             const input = await getInput();
             addButton(input.parentElement);
         } catch (error) {
-            // TODO
+            console.error("Google Chrome Event Checker extension error:");
+            console.error(error);
         }
     }
 
@@ -265,14 +266,27 @@
     }
 
     function init() {
-        startAdding();
+        const targetNode = document.body;
+        const config = { attributes: true };
 
-        // TODO: apparently popstate event is not being fired always,
-        // so use Mutation Observer and check whether body's [data-viewfamily] got changed
-        // (by using attributeFilter)
-        window.addEventListener("popstate", function (e) {
-            startAdding();
-        });
+        const callback = (mutationList) => {
+            for (const mutation of mutationList) {
+                if (mutation.attributeName !== "data-viewkey") {
+                    continue;
+                }
+
+                if (
+                    document.body.dataset.viewkey.toLowerCase() !== "eventedit"
+                ) {
+                    continue;
+                }
+
+                startAdding();
+            }
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
     }
 
     init();
