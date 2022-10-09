@@ -1,56 +1,68 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Google Calendar Event Checker Options</title>
+        <meta charset="UTF-8" />
+        <style>
+            #status {
+                align-items: center;
+                box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+                min-height: 35px;
+            }
 
-<head>
-    <title>Google Calendar Event Checker Options</title>
-    <meta charset="UTF-8">
-    <style>
-        #status {
-            align-items: center;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            min-height: 35px;
-        }
+            fieldset {
+                border: none;
+                display: flex;
+                flex-direction: column;
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
 
-        fieldset {
-            border: none;
-            display: flex;
-            flex-direction: column;
-            font-family: sans-serif;
-        }
-    </style>
-</head>
+    <body>
+        <form>
+            <fieldset>
+                <label>
+                    <input type="checkbox" id="add-emoji-check-mark" />
+                    Add check mark emoji ✅ in the beginning of the title to
+                    indicate event as completed.
+                </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        id="add-description-completed-datetime"
+                    />
+                    Add date and time label when it was completed to the
+                    description textarea.
+                </label>
+                <label>
+                    <input type="checkbox" id="add-description-origin-title" />
+                    Add origin title to the description textarea.
+                </label>
+                <label>
+                    <input type="checkbox" id="use-strikethrough-effect" />
+                    Add s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ effect on event title. ⚠️ Note: if this is
+                    enabled it's recommended to enable "Add origin title to the
+                    description textarea." as well in order to be able to find
+                    event in search.
+                </label>
+                <label>
+                    <input type="checkbox" id="add-emoji-crossed-mark" />
+                    Add crossed mark emoji ❌ button which adds same emoji in
+                    the beginning of the event title.
+                </label>
+                <label>
+                    <input type="checkbox" id="enable-reporting" />
+                    Enable error reporting and usage analytics. No user data is
+                    sent except name and version of Broswer and Operation
+                    System.
+                </label>
+            </fieldset>
+        </form>
 
-<body>
-    <form>
-        <fieldset>
-            <label>
-                <input type="checkbox" id="add-emoji-check-mark" />
-                Add check mark emoji ✅ in the beginning of the title to indicate event as completed.
-            </label>
-            <label>
-                <input type="checkbox" id="add-description-completed-datetime" />
-                Add date and time label when it was completed to the description textarea.
-            </label>
-            <label>
-                <input type="checkbox" id="add-description-origin-title" />
-                Add origin title to the description textarea.
-            </label>
-            <label>
-                <input type="checkbox" id="use-strikethrough-effect" />
-                Add s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶ effect on event title. ⚠️ Note: if this is enabled it's recommended to enable "Add origin title to the description textarea." as well in order to be able to find event in search.
-            </label>
-            <label>
-                <input type="checkbox" id="add-emoji-crossed-mark" />
-                Add crossed mark emoji ❌ button which adds same emoji in the beginning of the event title.
-            </label>
-        </fieldset>
-    </form>
-
-
-    <div id="status"></div>
-    <script src="options.js"></script>
-</body>
-
+        <div id="status"></div>
+        <script src="options.js"></script>
+    </body>
 </html>
