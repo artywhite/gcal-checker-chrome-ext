@@ -11,6 +11,7 @@
         "add-description-origin-title": true,
         "use-strikethrough-effect": true,
         "add-emoji-crossed-mark": false,
+        "enable-reporting": false,
     });
     const isAddCheckMark = Options["add-emoji-check-mark"];
     const isAddCrossedMark = Options["add-emoji-crossed-mark"];
@@ -148,18 +149,19 @@
 
         input.dispatchEvent(new Event("input", { bubbles: true }));
 
-        try {
-            toggleDescription({
-                originValue: removeStrikeEffect(removeEmoji(nextValue)),
-                checked: isMarked,
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        toggleDescription({
+            originValue: removeStrikeEffect(removeEmoji(nextValue)),
+            checked: isMarked,
+        });
     }
 
     function onButtonClicked(btnText) {
-        makeReplacement(btnText);
+        try {
+            makeReplacement(btnText);
+            log("Succesfull usage: click");
+        } catch (error) {
+            logError(error);
+        }
     }
 
     function toggleDescription({ originValue, checked }) {
@@ -167,7 +169,7 @@
             'div[contenteditable="true"][role="textbox"][aria-multiline="true"]'
         );
         if (!textDiv) {
-            console.error("Description div node was not found");
+            logError("Description div node was not found");
             return;
         }
 
@@ -256,13 +258,28 @@
             const input = await getInput();
             addButton(input.parentElement);
         } catch (error) {
-            console.error("Google Chrome Event Checker extension error:");
-            console.error(error);
+            logError(error);
         }
     }
 
     function getIsRightPage() {
         return window.location.href.indexOf("eventedit") !== -1;
+    }
+
+    function log(message) {
+        console.log("Google Chrome Event Checker extension log:");
+        console.log(message);
+        if (window.Sentry) {
+            Sentry.captureMessage(message);
+        }
+    }
+
+    function logError(error) {
+        console.error("Google Chrome Event Checker extension error:");
+        console.error(error);
+        if (window.Sentry) {
+            Sentry.captureException(error);
+        }
     }
 
     function init() {
@@ -289,5 +306,27 @@
         observer.observe(targetNode, config);
     }
 
-    init();
+    function initSentry() {
+        Sentry.init({
+            dsn: "https://6ba30b2efd7341d5b70786ee9f3d1b25@o4503916873777152.ingest.sentry.io/4503916877185024",
+            beforeSend: (event) => {
+                if (event.request.url) {
+                    // don't capture current url as it contains private data (event id)
+                    delete event.request.url;
+                }
+
+                return event;
+            },
+        });
+    }
+
+    try {
+        init();
+
+        if (Options["enable-reporting"]) {
+            initSentry();
+        }
+    } catch (error) {
+        logError(error);
+    }
 })();

@@ -32,6 +32,11 @@ const InitialOptions = {
      * Whether to add ❌ button.
      */
     "add-emoji-crossed-mark": false,
+
+    /**
+     * Whether to enable error and usage reporting (via Sentry).
+     */
+    "enable-reporting": false,
 };
 
 const OptionsKeys = Object.keys(InitialOptions);
