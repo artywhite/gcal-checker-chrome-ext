@@ -158,7 +158,7 @@
     function onButtonClicked(btnText) {
         try {
             makeReplacement(btnText);
-            log("Succesfull usage: click");
+            log("Successful usage: click");
         } catch (error) {
             logError(error);
         }
