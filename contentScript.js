@@ -307,8 +307,12 @@
     }
 
     function initSentry() {
+        const version = window.chrome?.runtime?.getManifest()?.version || "n/a";
         Sentry.init({
             dsn: "https://6ba30b2efd7341d5b70786ee9f3d1b25@o4503916873777152.ingest.sentry.io/4503916877185024",
+            initialScope: {
+                tags: { version },
+            },
             beforeSend: (event) => {
                 if (event.request.url) {
                     // don't capture current url as it contains private data (event id)
