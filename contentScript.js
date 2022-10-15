@@ -166,7 +166,7 @@
 
     function toggleDescription({ originValue, checked }) {
         const textDiv = document.querySelector(
-            'div[contenteditable="true"][role="textbox"][aria-multiline="true"]'
+            'div[role="textbox"][aria-multiline="true"]'
         );
         if (!textDiv) {
             logError("Description div node was not found");
