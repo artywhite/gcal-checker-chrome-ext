@@ -1,7 +1,7 @@
 {
     "name": "Google Calendar Event Checker",
     "short_name": "gcal-checker",
-    "version": "1.6.1",
+    "version": "1.6.2",
     "manifest_version": 3,
     "description": "It adds buttons to event title input to mark event as completed or canceled.",
     "options_ui": {

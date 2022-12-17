@@ -1,6 +1,6 @@
 (async function () {
     const BTN_WRAPPER_ID = "gcal-checker-chrome-ext-btn-wrapper";
-    const INPUT_SELECTOR = "#xCancelBu ~ div input";
+    const INPUT_SELECTOR = "[role='main'] input[type='text']";
 
     const storageGet = (obj) =>
         new Promise((resolve) => chrome.storage.sync.get(obj, resolve));
