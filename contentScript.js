@@ -315,11 +315,30 @@
             },
             beforeSend: (event) => {
                 if (event.request.url) {
-                    // don't capture current url as it contains private data (event id)
+                    // don't capture current url as it always would be same
+                    // and contains event id.
                     delete event.request.url;
                 }
 
                 return event;
+            },
+            beforeBreadcrumb: (breadcrumb, hint) => {
+                const { category } = breadcrumb;
+
+                // don't capture event id
+                if (category === "navigation") {
+                    const removeEventId = (pathname) =>
+                        pathname.replace(/\/eventedit\/[^/]+/, "/eventedit/");
+                    return {
+                        category: "navigation",
+                        data: {
+                            from: removeEventId(breadcrumb.data.from),
+                            to: removeEventId(breadcrumb.data.to),
+                        },
+                    };
+                }
+
+                return breadcrumb;
             },
         });
     }
