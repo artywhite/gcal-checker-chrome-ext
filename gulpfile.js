@@ -24,7 +24,7 @@ gulp.task("script", function () {
         .src([
             "./contentScript.js",
             "./options.js",
-            "sentry.7.14.0.bundle.min.js",
+            "sentry.7.29.0.bundle.min.js",
         ])
         .pipe(uglify())
         .pipe(gulp.dest("./dist"));
