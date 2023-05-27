@@ -236,7 +236,7 @@
             button.style.padding = 0;
             button.style.margin = "0 0 0 5px";
             button.style.background = "none";
-            button.style.fontSize = "0.9em";
+            button.style.fontSize = "26px";
 
             button.addEventListener("click", () => onButtonClicked(btnText));
 
