@@ -18,7 +18,7 @@
             ],
             "run_at": "document_idle",
             "js": [
-                "sentry.7.29.0.bundle.min.js",
+                "sentry.7.53.1.bundle.min.js",
                 "contentScript.js"
             ]
         }
