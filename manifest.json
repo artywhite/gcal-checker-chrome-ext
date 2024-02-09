@@ -1,9 +1,9 @@
 {
     "name": "Google Calendar Event Checker",
     "short_name": "gcal-checker",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "manifest_version": 3,
-    "description": "It adds buttons to event title input to mark event as completed or canceled.",
+    "description": "Mark events as completed or cancelled in Google Calendar with emojis or strikethroughs.",
     "options_ui": {
         "page": "options.html",
         "open_in_tab": false
@@ -18,7 +18,7 @@
             ],
             "run_at": "document_idle",
             "js": [
-                "sentry.7.53.1.bundle.min.js",
+                "sentry.7.100.1.bundle.min.js",
                 "contentScript.js"
             ]
         }
